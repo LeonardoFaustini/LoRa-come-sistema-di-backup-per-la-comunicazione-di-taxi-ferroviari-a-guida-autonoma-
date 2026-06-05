@@ -1,0 +1,328 @@
+PCBNEW-LibModule-V1  
+# encoding utf-8
+Units mm
+$INDEX
+MODULE_WIFI_KIT_32_(V3)
+$EndINDEX
+$MODULE MODULE_WIFI_KIT_32_(V3)
+Po 0 0 0 15 00000000 00000000 ~~
+Li MODULE_WIFI_KIT_32_(V3)
+Cd 
+Sc 00000000
+At STD
+Op 0 0 0
+.SolderMask 0
+.SolderPaste 0
+T0 -10.46 -26.985 1 1 0 0.05 N V 21 "MODULE_WIFI_KIT_32_(V3)"
+T1 -9.825 26.985 1 1 0 0.05 N V 21 "VAL**"
+DS -12.75 -25.1 12.75 -25.1 0.127 27
+DS 12.75 -25.1 12.75 22.8 0.127 27
+DS 12.75 22.8 7.75 22.8 0.127 27
+DS -7.75 22.8 -12.75 22.8 0.127 27
+DS -12.75 22.8 -12.75 -25.1 0.127 27
+DS -5 25.1 5 25.1 0.127 27
+DS -7.75 22.8 -5 25.1 0.127 27
+DS 5 25.1 7.75 22.8 0.127 27
+DS -12.75 -25.1 12.75 -25.1 0.127 21
+DS 12.75 -25.1 12.75 22.8 0.127 21
+DS 12.75 22.8 7.75 22.8 0.127 21
+DS -7.75 22.8 -12.75 22.8 0.127 21
+DS -12.75 22.8 -12.75 -25.1 0.127 21
+DS -5 25.1 5 25.1 0.127 21
+DS -7.75 22.8 -5 25.1 0.127 21
+DS 5 25.1 7.75 22.8 0.127 21
+DS -13 -25.35 -13 25.35 0.05 26
+DS -13 25.35 13 25.35 0.05 26
+DS 13 25.35 13 -25.35 0.05 26
+DS 13 -25.35 -13 -25.35 0.05 26
+DC -13.8 -22.4 -13.7 -22.4 0.2 21
+DC -13.8 -22.4 -13.7 -22.4 0.2 27
+$PAD
+Sh "J2_18" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po -11.51 20.78
+$EndPAD
+$PAD
+Sh "J3_18" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po 11.51 20.78
+$EndPAD
+$PAD
+Sh "J2_17" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po -11.51 18.24
+$EndPAD
+$PAD
+Sh "J2_16" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po -11.51 15.7
+$EndPAD
+$PAD
+Sh "J2_15" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po -11.51 13.16
+$EndPAD
+$PAD
+Sh "J2_14" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po -11.51 10.62
+$EndPAD
+$PAD
+Sh "J2_13" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po -11.51 8.08
+$EndPAD
+$PAD
+Sh "J3_17" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po 11.51 18.24
+$EndPAD
+$PAD
+Sh "J3_16" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po 11.51 15.7
+$EndPAD
+$PAD
+Sh "J3_15" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po 11.51 13.16
+$EndPAD
+$PAD
+Sh "J3_14" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po 11.51 10.62
+$EndPAD
+$PAD
+Sh "J3_13" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po 11.51 8.08
+$EndPAD
+$PAD
+Sh "J3_12" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po 11.51 5.54
+$EndPAD
+$PAD
+Sh "J3_11" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po 11.51 3
+$EndPAD
+$PAD
+Sh "J3_10" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po 11.51 0.46
+$EndPAD
+$PAD
+Sh "J3_9" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po 11.51 -2.08
+$EndPAD
+$PAD
+Sh "J3_8" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po 11.51 -4.62
+$EndPAD
+$PAD
+Sh "J3_7" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po 11.51 -7.16
+$EndPAD
+$PAD
+Sh "J3_6" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po 11.51 -9.7
+$EndPAD
+$PAD
+Sh "J3_5" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po 11.51 -12.24
+$EndPAD
+$PAD
+Sh "J3_4" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po 11.51 -14.78
+$EndPAD
+$PAD
+Sh "J3_3" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po 11.51 -17.32
+$EndPAD
+$PAD
+Sh "J3_2" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po 11.51 -19.86
+$EndPAD
+$PAD
+Sh "J2_12" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po -11.51 5.54
+$EndPAD
+$PAD
+Sh "J2_11" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po -11.51 3
+$EndPAD
+$PAD
+Sh "J2_10" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po -11.51 0.46
+$EndPAD
+$PAD
+Sh "J2_9" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po -11.51 -2.08
+$EndPAD
+$PAD
+Sh "J2_8" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po -11.51 -4.62
+$EndPAD
+$PAD
+Sh "J2_7" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po -11.51 -7.16
+$EndPAD
+$PAD
+Sh "J2_6" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po -11.51 -9.7
+$EndPAD
+$PAD
+Sh "J2_5" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po -11.51 -12.24
+$EndPAD
+$PAD
+Sh "J2_4" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po -11.51 -14.78
+$EndPAD
+$PAD
+Sh "J2_3" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po -11.51 -17.32
+$EndPAD
+$PAD
+Sh "J2_2" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po -11.51 -19.86
+$EndPAD
+$PAD
+Sh "J2_1" R 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po -11.51 -22.4
+$EndPAD
+$PAD
+Sh "J3_1" C 1.65 1.65 0 0 0
+Dr 1.1 0 0
+At STD N 00C0FFFF
+.SolderMask 0
+Ne 0 ""
+Po 11.51 -22.4
+$EndPAD
+$EndMODULE MODULE_WIFI_KIT_32_(V3)
