@@ -1,0 +1,71 @@
+% 1. Configurazione
+readChannelID = [inserisci ID canale];
+readAPIKey = '[inserisci chiave di lettura]';
+latRX = [Inserisci le tue coordinate RX reali];
+lonRX = [Inserisci le tue coordinate RX reali];
+
+
+% 2. Lettura dati (Prendiamo tutti i 6 campi per sicurezza)
+data = thingSpeakRead(readChannelID, 'Fields', [1,2,3,4,5,6], 'NumPoints', 50, ...
+                      'ReadKey', readAPIKey, 'OutputFormat', 'table');
+
+if isempty(data)
+    disp('Canale vuoto'); return;
+end
+
+% 3. Accumulo dati
+all_lat = []; all_lon = []; all_rssi = [];
+
+for r = 1:height(data)
+    % Parsing robusto con parentesi tonde (r) invece delle graffe
+    lats  = str2double(strsplit(string(data.buffer_lat(r)), ','))';
+    lons  = str2double(strsplit(string(data.buffer_lon(r)), ','))';
+    rssis = str2double(strsplit(string(data.buffer_RSSI(r)), ','))';
+    
+    % Controllo allineamento lunghezze (per evitare crash nel geoscatter)
+    n = min([length(lats), length(lons), length(rssis)]);
+    if n == 0, continue; end
+    
+    % Accumulo solo i dati validi e allineati
+    all_lat  = [all_lat; lats(1:n)];
+    all_lon  = [all_lon; lons(1:n)];
+    all_rssi = [all_rssi; rssis(1:n)];
+end
+
+% 4. Definizione soglie 
+s_nero = -120; s_rosso = -105; s_giallo = -85;
+
+% 5. Creazione mappa
+% Inizializziamo la mappa con il punto fisso RX (Gateway)
+geoscatter(latRX, lonRX, 100, 'b', 'd', 'filled', 'DisplayName', 'Gateway RX');
+hold on;
+
+% Gruppo VERDE 
+iv = all_rssi >= s_giallo;
+if any(iv)
+    geoscatter(all_lat(iv), all_lon(iv), 40, [0 0.8 0], 'filled', 'DisplayName', 'Ottimo (> -85dBm)');
+end
+
+% Gruppo GIALLO 
+ig = all_rssi < s_giallo & all_rssi >= s_rosso;
+if any(ig)
+    geoscatter(all_lat(ig), all_lon(ig), 40, [1 0.9 0], 'filled', 'DisplayName', 'Medio (-85 a -105)');
+end
+
+% Gruppo ROSSO 
+ir = all_rssi < s_rosso & all_rssi >= s_nero;
+if any(ir)
+    geoscatter(all_lat(ir), all_lon(ir), 40, [1 0 0], 'filled', 'DisplayName', 'Critico (-105 a -120)');
+end
+
+% Gruppo NERO 
+in = all_rssi < s_nero;
+if any(in)
+    geoscatter(all_lat(in), all_lon(in), 40, [0 0 0], 'filled', 'DisplayName', 'Limite (< -120dBm)');
+end
+
+% 6. Configurazione Finale
+geobasemap streets; 
+title('Analisi Geografica Copertura LoRa - Rovereto');
+legend('Location', 'northwest');
+hold off;

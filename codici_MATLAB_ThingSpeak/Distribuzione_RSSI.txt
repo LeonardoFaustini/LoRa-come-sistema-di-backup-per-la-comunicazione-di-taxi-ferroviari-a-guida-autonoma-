@@ -1,0 +1,59 @@
+% 1. Configurazione
+readChannelID = [inserisci ID canale];
+readAPIKey = '[inserisci chiave di lettura]';
+latRX = [Inserisci le tue coordinate RX reali];
+lonRX = [Inserisci le tue coordinate RX reali];
+
+% 2. Lettura dati
+data = thingSpeakRead(readChannelID, 'Fields', [1,2,3,4,5,6], 'NumPoints', 50, ...
+                      'ReadKey', readAPIKey, 'OutputFormat', 'table');
+
+if isempty(data)
+    disp('Canale vuoto'); return;
+end
+
+% 3. Accumolo
+all_dist = [];
+all_rssi = [];
+all_snr = [];
+
+% 4. Ciclo su ogni riga (buffer) ricevuta
+for r = 1:height(data)
+    % Parsing dei singoli buffer usando i nomi esatti già definiti nei campi del canale
+    rssis    = str2double(strsplit(string(data.buffer_RSSI(r)), ','))';
+    snrs     = str2double(strsplit(string(data.buffer_SNR(r)), ','))';
+    lats     = str2double(strsplit(string(data.buffer_lat(r)), ','))';
+    lons     = str2double(strsplit(string(data.buffer_lon(r)), ','))';
+    
+    % Calcolo Distanza Haversine per questo buffer
+    R = 6371000;
+    dLat = deg2rad(lats - latRX);
+    dLon = deg2rad(lons - lonRX);
+    a = sin(dLat/2).^2 + cos(deg2rad(latRX)) .* cos(deg2rad(lats)) .* sin(dLon/2).^2;
+    dist_m = 2 * R * asin(sqrt(a));
+    
+    % Accumulo dati
+    all_dist = [all_dist; dist_m];
+    all_rssi = [all_rssi; rssis];
+    all_snr  = [all_snr; snrs];
+end
+
+
+% 5. Grafico Istogramma Distribuzione RSSI
+figure('Name', 'Analisi Statistica Segnale');
+
+h = histogram(all_rssi, 'BinWidth', 2, 'FaceColor', [0.4 0.7 0.4], 'EdgeColor', 'w');
+
+grid on;
+xlabel('RSSI (dBm)');
+ylabel('Frequenza (Numero di Pacchetti)');
+title('Distribuzione della Potenza del Segnale Ricevuto');
+
+% Calcolo e visualizzazione della media 
+rssi_medio = mean(all_rssi);
+hold on;
+xline(rssi_medio, '--r', ['Media: ', num2str(rssi_medio, '%.1f'), ' dBm'], 'LineWidth', 2);
+hold off;
+
+% Aggiungiamo una nota sul grafico
+text(min(all_rssi), max(h.Values)*0.9, [' Totale campioni: ', num2str(length(all_rssi))], 'FontSize', 10);

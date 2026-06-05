@@ -1,0 +1,67 @@
+% 1. Configurazione
+readChannelID = [inserisci ID canale];
+readAPIKey = '[inserisci chiave di lettura]';
+latRX = [Inserisci le tue coordinate RX reali];
+lonRX = [Inserisci le tue coordinate RX reali];
+
+
+% 2. Leggiamo gli ultimi 50 inserimenti 
+data = thingSpeakRead(readChannelID, 'Fields', [1,2,3,4,5, 6], 'NumPoints', 50, ...
+                      'ReadKey', readAPIKey, 'OutputFormat', 'table');
+
+if isempty(data)
+    disp('Canale vuoto'); return;
+end
+
+% 3. Accumulatori per tutti i punti
+all_dist = [];
+all_rssi = [];
+all_snr = [];
+all_ids = [];
+all_idPacks = [];
+
+% 4. Ciclo su ogni riga (buffer) ricevuta
+for r = 1:height(data)
+    % Parsing dei singoli buffer usando i nomi esatti già definiti nei campi del canale
+    ids      = str2double(strsplit(string(data.buffer_ID_TX(r)), ','))';
+    idPacks  = str2double(strsplit(string(data.buffer_ID_packet(r)), ','))';
+    lats     = str2double(strsplit(string(data.buffer_lat(r)), ','))';
+    lons     = str2double(strsplit(string(data.buffer_lon(r)), ','))';
+    rssis    = str2double(strsplit(string(data.buffer_RSSI(r)), ','))';
+    snrs     = str2double(strsplit(string(data.buffer_SNR(r)), ','))';
+    
+    % Filtro di sicurezza se qualche dato nei buffer è corrotto o mancante
+    n = min([length(lats), length(lons), length(rssis), length(snrs), length(idPacks)]);
+    % Se n è zero o i dati sono corrotti, salta questa riga
+    if n == 0, continue; end
+    % Tronca tutto alla stessa lunghezza n per evitare l'errore dello scatter
+    lats = lats(1:n); lons = lons(1:n); 
+    rssis = rssis(1:n); snrs = snrs(1:n);
+    idPacks = idPacks(1:n); ids = ids(1:n);
+    
+    % Calcolo Distanza Haversine per questo buffer
+    R = 6371000;
+    dLat = deg2rad(lats - latRX);
+    dLon = deg2rad(lons - lonRX);
+    a = sin(dLat/2).^2 + cos(deg2rad(latRX)) .* cos(deg2rad(lats)) .* sin(dLon/2).^2;
+    dist_m = 2 * R * asin(sqrt(a));
+    
+    % Accumulo i dati
+    all_dist = [all_dist; dist_m];
+    all_rssi = [all_rssi; rssis];
+    all_snr  = [all_snr; snrs];
+    all_ids  = [all_ids; ids];
+    all_idPacks = [all_idPacks; idPacks];
+end
+
+
+% 5. Grafico RSSI vs Distanza
+subplot(2,1,1); % Divide la finestra in 2 righe, 1 colonna
+scatter(all_dist, all_rssi, 30, 'filled', 'MarkerFaceColor', 'r');
+grid on; ylabel('RSSI (dBm)'); title('Qualità Segnale vs Distanza');
+
+% 6. Grafico SNR vs Distanza
+subplot(2,1,2);
+scatter(all_dist, all_snr, 30, 'filled', 'MarkerFaceColor', 'b');
+grid on; xlabel('Distanza (m)'); ylabel('SNR (dB)');
+

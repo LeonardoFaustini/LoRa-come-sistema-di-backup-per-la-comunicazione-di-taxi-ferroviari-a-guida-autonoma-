@@ -1,0 +1,135 @@
+% 1. Configurazione
+readChannelID = [inserisci ID canale];
+readAPIKey = '[inserisci chiave di lettura]';
+latRX = [Inserisci le tue coordinate RX reali];
+lonRX = [Inserisci le tue coordinate RX reali];
+
+% 2. Lettura dati
+data = thingSpeakRead(readChannelID, 'Fields', [1,2,3,4,5,6], 'NumPoints', 50, ...
+                      'ReadKey', readAPIKey, 'OutputFormat', 'table');
+
+if isempty(data), disp('Canale vuoto'); return; end
+
+% 3. Parsing e Accumulo con filtro OUTLIERS
+all_dist = []; all_idPacks = [];
+max_jump = 100; % Se il salto tra ID è > 100, lo consideriamo un errore di memoria (es. 6970)
+
+for r = 1:height(data)
+    % Estraggo i dati dai buffer
+    idP = str2double(strsplit(string(data.buffer_ID_packet(r)), ','))';
+    la  = str2double(strsplit(string(data.buffer_lat(r)), ','))';
+    lo  = str2double(strsplit(string(data.buffer_lon(r)), ','))';
+    
+    n = min([length(la), length(idP)]);
+    if n == 0, continue; end
+    
+    % Filtro pacchetto da validità ID
+    idP_validi = []; la_validi = []; lo_validi = [];
+    
+    for i = 1:n
+        % 1. Scartiamo ID assurdi
+        if idP(i) > 5000 || isnan(idP(i)), continue; end
+        
+        % 2. Scartiamo i salti impossibili (es. successo da 68 a 6970)
+        if ~isempty(all_idPacks)
+            if (idP(i) - max(all_idPacks)) > max_jump
+                fprintf('Salto anomalo rilevato: ID %d. Scarto.\n', idP(i));
+                continue; 
+            end
+        end
+        
+        % Altrimenti lo teniamo
+        idP_validi = [idP_validi; idP(i)];
+        la_validi  = [la_validi; la(i)];
+        lo_validi  = [lo_validi; lo(i)];
+    end
+
+    % Calcolo Distanza 
+    if ~isempty(idP_validi)
+        nv = length(idP_validi);
+        dLat = deg2rad(la_validi - latRX);
+        dLon = deg2rad(lo_validi - lonRX);
+        a = sin(dLat/2).^2 + cos(deg2rad(latRX)) .* cos(deg2rad(la_validi)) .* sin(dLon/2).^2;
+        dist_m = 2 * 6371000 * asin(sqrt(a));
+        
+        all_dist = [all_dist; dist_m];
+        all_idPacks = [all_idPacks; idP_validi];
+    end
+end
+
+% Ordiniamo i dati in base all'ID
+[all_idPacks, sortIdx] = sort(all_idPacks);
+all_dist = all_dist(sortIdx);
+
+% Rimuoviamo duplicati
+[all_idPacks, uniqueIdx] = unique(all_idPacks, 'stable');
+all_dist = all_dist(uniqueIdx);
+
+% 4. Ricostruzione e interpolazione
+id_min_globale = min(all_idPacks);
+id_max_globale = max(all_idPacks);
+
+seq_ideale_ids = (id_min_globale : id_max_globale)';
+totale_attesi = length(seq_ideale_ids);
+seq_ideale_dist = NaN(totale_attesi, 1);
+
+[ismem, idx] = ismember(seq_ideale_ids, all_idPacks);
+seq_ideale_dist(ismem) = all_dist(idx(ismem));
+id_persi = seq_ideale_ids(~ismem);
+
+% INTERPOLAZIONE (per assegnare distanza ai pacchetti persi)
+for k = 1:length(id_persi)
+    id_mancante = id_persi(k);
+    idx_mancante = find(seq_ideale_ids == id_mancante);
+    idx_prev = find(~isnan(seq_ideale_dist(1:idx_mancante-1)), 1, 'last');
+    idx_next = find(~isnan(seq_ideale_dist(idx_mancante+1:end)), 1, 'first') + idx_mancante;
+    
+    if ~isempty(idx_prev) && ~isempty(idx_next)
+        seq_ideale_dist(idx_mancante) = mean([seq_ideale_dist(idx_prev), seq_ideale_dist(idx_next)]);
+    elseif ~isempty(idx_prev)
+        seq_ideale_dist(idx_mancante) = seq_ideale_dist(idx_prev);
+    elseif ~isempty(idx_next)
+        seq_ideale_dist(idx_mancante) = seq_ideale_dist(idx_next);
+    end
+end
+
+% 5. Binning e calcolo perdita percentuale 
+passo_bin = 50; 
+max_d = ceil(max(seq_ideale_dist)/passo_bin)*passo_bin;
+if isempty(max_d) || isnan(max_d), max_d = 50; end
+bins = 0:passo_bin:max_d;
+
+loss_per_bin = zeros(length(bins)-1, 1);
+etichette_bin = cell(length(bins)-1, 1);
+
+for b = 1:length(bins)-1
+    in_bin_idx = find(seq_ideale_dist >= bins(b) & seq_ideale_dist < bins(b+1));
+    attesi_bin = length(in_bin_idx);
+    if attesi_bin > 0
+        persi_bin = sum(ismember(seq_ideale_ids(in_bin_idx), id_persi));
+        loss_per_bin(b) = (persi_bin / attesi_bin) * 100;
+    else
+        loss_per_bin(b) = 0;
+    end
+    etichette_bin{b} = sprintf('%d-%d', bins(b), bins(b+1));
+end
+
+loss_globale = (length(id_persi) / totale_attesi) * 100;
+
+% 6. Grafici
+figure('Name', 'Analisi Affidabilità Link');
+subplot(2,1,1);
+bar(loss_per_bin, 'FaceColor', [0.85 0.32 0.09]);
+set(gca, 'XTickLabel', etichette_bin);
+ylabel('Packet Loss (%)');
+title(sprintf('Packet Loss vs Distanza (Perdita Totale: %.1f%%)', loss_globale));
+grid on;
+
+subplot(2,1,2);
+plot(seq_ideale_dist, seq_ideale_ids, 'k.'); hold on;
+plot(all_dist, all_idPacks, 'bo');
+if ~isempty(id_persi)
+    [~, loc] = ismember(id_persi, seq_ideale_ids);
+    plot(seq_ideale_dist(loc), id_persi, 'rx');
+end
+xlabel('Distanza (m)'); ylabel('ID Pacchetto'); grid on;
