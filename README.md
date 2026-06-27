@@ -14,7 +14,7 @@ In questa cartella sono stati inseriti tutti i dati acquisiti nelle fasi di test
 All'interno di questa cartella sono inseriti i file STL del case del prototipo e dell'antenna creata, già orientati e settati correttamente per la stampa FDM.
 
 ### Codici Python, lettura seriale e grafici
-In questa cartella è presente il codice python usato per leggere e salvare i dati dalla seriale in fase di test e un notebook usato per passare dai dati csv ai grafici.
+In questa cartella è presente il codice Python usato per leggere e salvare i dati dalla seriale in fase di test e un notebook usato per passare dai dati csv ai grafici.
 
 
 Inoltre, la repository contiene l'analisi tramite VNA delle diverse antenne usate in fase di test, lo schematico KiCad per il collegamento tra il modulo GPS e la Heltec, i codici MATLAB usati su ThingSpeak per spacchettare i buffer di dati ricevuti per poterne plottare i grafici.
