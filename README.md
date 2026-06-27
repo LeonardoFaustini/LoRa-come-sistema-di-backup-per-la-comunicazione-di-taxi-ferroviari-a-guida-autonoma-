@@ -17,4 +17,4 @@ All'interno di questa cartella sono inseriti i file STL del case del prototipo e
 In questa cartella è presente il codice python usato per leggere e salvare i dati dalla seriale in fase di test e un notebook usato per passare dai dati csv ai grafici.
 
 
-Inoltre, sono contenuti l'analisi tramite VNA delle diverse antenne usate in fase di test, lo schematico KiCad per il collegamento tra il modulo GPS e la Heltec, i codici MATLAB usati su ThingSpeak per spacchettare i buffer di dati ricevuti per poterne plottare i grafici, i paper e gli articoli utilizzati nella fase di ricerca dello stato dell'arte e i datasheet dei moduli hardware usati.
+Inoltre, sono contenuti l'analisi tramite VNA delle diverse antenne usate in fase di test, lo schematico KiCad per il collegamento tra il modulo GPS e la Heltec, i codici MATLAB usati su ThingSpeak per spacchettare i buffer di dati ricevuti per poterne plottare i grafici.
